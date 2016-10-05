@@ -1,0 +1,12 @@
+= GUI =
+
+Allows you to create a GUI for a TFT LCD screen on an arduino.
+You will need the following libraries: "Adafruit_GFX.h", "Adafruit_TFTLCD.h" and "TouchScreen.h" to get it working.
+Help can be found on http://willguimontmartin.x10.mx/GUI/ .
+
+== License ==
+
+TFTLCD_GUI - Library to make GUI on TFT LCD screens.
+Created by William Guimont-Martin, 2015.
+Released into the public domain.
+	

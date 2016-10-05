@@ -1,0 +1,50 @@
+#######################################
+# Syntax Coloring Map Servo           #
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)				  #
+#######################################
+
+Callback	KEYWORD1
+Ornement  KEYWORD1
+Button	KEYWORD1
+RectButton	KEYWORD1
+RoundButton	KEYWORD1
+GUI	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)	  #
+#######################################
+
+update	KEYWORD2
+draw	KEYWORD2
+clicked	KEYWORD2
+addButton	KEYWORD2
+setCallback	KEYWORD2
+setOrnement	KEYWORD2
+execute	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)                #
+#######################################
+
+BLACK	LITERAL1
+BLUE	LITERAL1
+RED	LITERAL1
+GREEN	LITERAL1
+CYAN	LITERAL1
+MAGENTA	LITERAL1
+YELLOW	LITERAL1
+WHITE	LITERAL1
+NAVY	LITERAL1
+DARK_GREEN	LITERAL1
+DARK_CYAN	LITERAL1
+MAROON	LITERAL1
+PURPLE	LITERAL1
+OLIVE	LITERAL1
+LIGHT_GREY	LITERAL1
+DARK_GREY	LITERAL1
+ORANGE	LITERAL1
+GREEN_YELLOW	LITERAL1
+PINK	LITERAL1
