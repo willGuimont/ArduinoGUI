@@ -1,9 +1,126 @@
-= GUI =
+# ArduinoGUI
 
 Allows you to create a GUI for a TFT LCD screen on an arduino.
 You will need the following libraries: "Adafruit_GFX.h", "Adafruit_TFTLCD.h" and "TouchScreen.h" to get it working.
-Help can be found on http://willguimontmartin.x10.mx/GUI/ .
 
+= Quickstart =
+```C++
+// Defines all pins...
+// Create touchscreen & TFTscreen objects
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
+
+// Create GUI handler object
+GUI gui(&tft);
+
+// Ornements (add custom stuff on your buttons)
+// You have to inherite from Ornement and override
+// "void draw(Adafruit_TFTLCD* tft)"
+// use getX(), getY(), getW() and getH() to get position and size
+class UpArrow : public Ornement
+{
+  virtual void draw(Adafruit_TFTLCD* tft)
+  {
+    int x = getX();
+    int y = getY();
+    int w = getW();
+    int h = getH();
+    tft->fillTriangle(x +  w/2,  y + (w)/3,
+                           x +  w/3,  y +   2*(w)/3,
+                           x + 2*(w)/3, y + 2*(w)/3,
+                           0xF81F); // Magenta
+  }
+};
+
+// Same to write text on button
+class TextOrnment : public Ornement
+{
+  virtual void draw(Adafruit_TFTLCD* tft)
+  {
+    int x = getX();
+    int y = getY();
+    int h = getH();
+    
+    tft->setCursor(x, y + 7);
+    tft->setTextColor(BLACK);  tft->setTextSize(h-2);
+    tft->print("Hello");
+  }
+};
+
+// Callbacks (will be called when pressed)
+// You have to inherite from Callback and override
+// "void execute()"
+
+class PrintText : public Callback
+{
+  public:
+    PrintText(char* text)
+    {
+      text_ = text;
+    }
+    void execute()
+    {
+        Serial.println(text_);
+    } 
+  private:
+    char* text_;
+};
+
+// Setup
+void setup(void) 
+{
+  // Init tft
+  tft.reset();
+  uint16_t identifier = tft.readID();
+  tft.begin(identifier);
+  tft.fillScreen(BLACK);
+  pinMode(13, OUTPUT);
+  
+  // 0x07E0 = GREEN
+  // Add rect button to GUI
+  // RectButton(int x, int y, int w, int h, long color);
+  gui.addButton((new RectButton(10, 10, 100, 100, 0x07E0))->setOrnement(new UpArrow)->setCallback(new PrintText("Up button")));
+  // Add rect button to GUI
+  // RoundButton(int x, int y, int r, long color);
+  gui.addButton((new RoundButton(70, 230, 50, 0x07E0))->setCallback(new PrintText("Round button")));
+  
+  // Draw GUI
+  gui.draw();
+}
+
+// Main loop
+void loop()
+{
+  // Get input
+  digitalWrite(13, HIGH);
+  TSPoint p = ts.getPoint();
+  digitalWrite(13, LOW);
+
+  // if sharing pins, you'll need to fix the directions of the touchscreen pins
+  //pinMode(XP, OUTPUT);
+  pinMode(XM, OUTPUT);
+  pinMode(YP, OUTPUT);
+  //pinMode(YM, OUTPUT);
+
+  // we have some minimum pressure we consider 'valid'
+  // pressure of 0 means no pressing!
+
+  if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
+    // scale from 0->1023 to tft.width
+    p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+    p.y = map(p.y, TS_MINY, TS_MAXY, tft.height()-80, 0); // May need ajustment, some screens are strange...
+    
+    // Update return true if a button has been press
+    // Corresponding callback will be called
+    if (gui.update(p))        
+    {
+      tft.fillScreen(BLACK);  // Clear screen
+      gui.draw();             // Draw GUI
+      delay(50);              // Must wait for the screen to have finished drawing
+    }
+  }
+}
+```
 == License ==
 
 TFTLCD_GUI - Library to make GUI on TFT LCD screens.
