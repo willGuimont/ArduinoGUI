@@ -5,7 +5,43 @@ You will need the following libraries: "Adafruit_GFX.h", "Adafruit_TFTLCD.h" and
 
 = Quickstart =
 ```C++
-// Defines all pins...
+// Defines
+
+#if defined(__SAM3X8E__)
+    #undef __FlashStringHelper::F(string_literal)
+    #define F(string_literal) string_literal
+#endif
+
+// Touch screen pins
+#define YP A1  // must be an analog pin, use "An" notation!
+#define XM A2  // must be an analog pin, use "An" notation!
+#define YM 7   // can be a digital pin
+#define XP 6   // can be a digital pin
+
+// Pression defines
+#define TS_MINX 150
+#define TS_MINY 120
+#define TS_MAXX 920
+#define TS_MAXY 940
+
+// LCD pins
+#define LCD_CS A3
+#define LCD_CD A2
+#define LCD_WR A1
+#define LCD_RD A0
+#define LCD_RESET A4 // optional
+
+// Assign human-readable names to some common 16-bit color values:
+
+#define BLACK   0x0000
+#define BLUE    0x001F
+#define RED     0xF800
+#define GREEN   0x07E0
+#define CYAN    0x07FF
+#define MAGENTA 0xF81F
+#define YELLOW  0xFFE0
+#define WHITE   0xFFFF
+
 // Create touchscreen & TFTscreen objects
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
@@ -28,7 +64,7 @@ class UpArrow : public Ornement
     tft->fillTriangle(x +  w/2,  y + (w)/3,
                            x +  w/3,  y +   2*(w)/3,
                            x + 2*(w)/3, y + 2*(w)/3,
-                           0xF81F); // Magenta
+                           MAGENTA);
   }
 };
 
@@ -79,10 +115,10 @@ void setup(void)
   // 0x07E0 = GREEN
   // Add rect button to GUI
   // RectButton(int x, int y, int w, int h, long color);
-  gui.addButton((new RectButton(10, 10, 100, 100, 0x07E0))->setOrnement(new UpArrow)->setCallback(new PrintText("Up button")));
+  gui.addButton((new RectButton(10, 10, 100, 100, GREEN))->setOrnement(new UpArrow)->setCallback(new PrintText("Up button")));
   // Add rect button to GUI
   // RoundButton(int x, int y, int r, long color);
-  gui.addButton((new RoundButton(70, 230, 50, 0x07E0))->setCallback(new PrintText("Round button")));
+  gui.addButton((new RoundButton(70, 230, 50, GREEN))->setCallback(new PrintText("Round button")));
   
   // Draw GUI
   gui.draw();
